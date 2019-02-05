@@ -87,7 +87,7 @@ class subtitle_ocr {
         $a = scandir($this->src);
         $files = [];
         foreach($a as $v) {
-            if (($v <> '..') && ($v <> '.')) {
+            if (($v <> '..') && ($v <> '.') && ($v <> '.gitkeep')) {
                 $files[] = $v;
             }
         }
