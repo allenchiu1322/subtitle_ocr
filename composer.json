@@ -1,0 +1,7 @@
+{
+    "name": "usagi/subtitle_ocr",
+    "type": "project",
+    "require": {
+        "thiagoalessio/tesseract_ocr": "^2.7"
+    }
+}
