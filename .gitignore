@@ -1,7 +1,11 @@
-img/*
-img_ocr/*
-img_hit/*
-img_miss/*
+img/*.jpg
+img_ocr/*.jpg
+img_hit/*.jpg
+img_miss/*.jpg
+img/*.JPG
+img_ocr/*.JPG
+img_hit/*.JPG
+img_miss/*.JPG
 vendor
 tmp.jpg
 .DS_Store
