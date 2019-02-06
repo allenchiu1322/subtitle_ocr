@@ -12,6 +12,9 @@ class subtitle_ocr {
     public $stat_hit = 0;
     public $stat_miss = 0;
 
+    public $correct_find = [];
+    public $correct_replace = [];
+
     public function ocr_image($src, $dst) {
         // config
         $width = 1280;
@@ -30,11 +33,17 @@ class subtitle_ocr {
 
         // ocr
         try {
-            $text = $this->filter_chars((new TesseractOCR('tmp.jpg'))->psm(1)->lang('chi_tra')->run());
+            $text = (new TesseractOCR('tmp.jpg'))->psm(1)->lang('chi_tra')->run();
         } catch (Exception $e) {
             echo(sprintf('Processing %s error!', $src) . PHP_EOL);
 //            var_dump($e);
             $text = '';
+        }
+
+        if ($text <> '') {
+            $text = $this->filter_chars($text);
+            $text = str_replace($this->correct_find, $this->correct_replace, $text);
+            $text = trim($text);
         }
 
 
@@ -93,6 +102,14 @@ class subtitle_ocr {
 
     public function main() {
 
+        // load correct dic
+        $h = fopen('correct.csv', 'r');
+        while(($data = fgetcsv($h, 1000, ',')) !== false) {
+            $this->correct_find[] = $data[0];
+            $this->correct_replace[] = $data[1];
+        }
+        fclose($h);
+
         $a = scandir($this->src);
         $files = [];
         foreach($a as $v) {
@@ -105,7 +122,7 @@ class subtitle_ocr {
             $this->ocr_image($f, $this->dst);
         }
 
-        echo(sprintf('Hit: %d, Miss: %d, Rate: %0.2f%', $this->stat_hit, $this->stat_miss, ($this->stat_hit/($this->stat_hit+$this->stat_miss)) * 100) . PHP_EOL);
+        echo(sprintf('Hit: %d, Miss: %d, Rate: %0.2f%%', $this->stat_hit, $this->stat_miss, ($this->stat_hit/($this->stat_hit+$this->stat_miss)) * 100) . PHP_EOL);
 
     }
 }
