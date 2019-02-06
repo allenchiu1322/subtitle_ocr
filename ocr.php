@@ -9,6 +9,9 @@ class subtitle_ocr {
     public $src = 'img';
     public $dst = 'img_ocr';
 
+    public $stat_hit = 0;
+    public $stat_miss = 0;
+
     public function ocr_image($src, $dst) {
         // config
         $width = 1280;
@@ -39,6 +42,12 @@ class subtitle_ocr {
         if ($text == '') {
             $text = '000_unsuccessful_' . time();
             $hit = false;
+        }
+
+        if ($hit) {
+            $this->stat_hit++;
+        } else {
+            $this->stat_miss++;
         }
 
         // copy
@@ -95,6 +104,8 @@ class subtitle_ocr {
         foreach($files as $f) {
             $this->ocr_image($f, $this->dst);
         }
+
+        echo(sprintf('Hit: %d, Miss: %d, Rate: %0.2f%', $this->stat_hit, $this->stat_miss, ($this->stat_hit/($this->stat_hit+$this->stat_miss)) * 100) . PHP_EOL);
 
     }
 }
